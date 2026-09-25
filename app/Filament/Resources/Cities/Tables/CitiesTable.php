@@ -11,6 +11,9 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Filters\SelectFilter;
+use App\Models\City as FilamentModel;
 
 class CitiesTable
 {
@@ -26,7 +29,16 @@ class CitiesTable
                 ->label('Foto Kota')
             ])
             ->filters([
-                TrashedFilter::make(),
+                SelectFilter::make('name')
+                ->label('Filter Nama')
+                ->options(
+                    // Mengambil data nama unik yang tersimpan di database
+                    FilamentModel::query()
+                        ->pluck('name', 'name')
+                        ->toArray()
+                )
+                ->searchable()
+                ->placeholder('Pilih Nama Kota'),
             ])
             ->recordActions([
                 EditAction::make(),
